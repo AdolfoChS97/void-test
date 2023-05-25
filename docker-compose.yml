@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  backend: 
+    image: 'void-backend'
+    container_name: 'void-backend'
+    build: 
+      context: .
+      dockerfile: '.docker/Dockerfile'
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/app
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+# # Names our volume
+volumes:
+  db:
+    driver: local
+
+networks:
+  ingress:
+    name: majordome
+    external: true
