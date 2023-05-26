@@ -1,15 +1,13 @@
 import { HttpService } from '@nestjs/axios';
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SummonersService } from '../summoners/summoners.service';
 import { firstValueFrom } from 'rxjs';
 import { RegionMapper } from './utils/region.mapper';
+import { PaginationDto } from 'src/dtos/pagination.dto';
+import { QueryParamsRiotDto } from 'src/dtos/riot-pagination.dto';
+import { MatchesMapper } from './utils/matches.mapper';
+import { handleErrorResponse } from 'src/utils/handle-error.helper';
 
 @Injectable()
 export class MatchesService {
@@ -46,21 +44,25 @@ export class MatchesService {
         },
       } = e;
 
-      if (status === 400) throw new BadRequestException(`${message}`);
-      if (status === 401) throw new UnauthorizedException(`${message}`);
-      if (status === 404) throw new NotFoundException(`${message}`);
-      throw new InternalServerErrorException(JSON.stringify(e));
+      handleErrorResponse(status, message, e);
     }
   }
 
-  async getMatchesIdsByPuuid(puuid: string, region: string): Promise<string[]> {
+  async getMatchesIdsByPuuid(
+    puuid: string,
+    platformId: string,
+    params: QueryParamsRiotDto = { count: 20, start: 0 },
+  ): Promise<string[]> {
     try {
       const { data } = await firstValueFrom(
         this.httpService.get(
-          `https://${region}.${this.configService.get<string>(
+          `https://${platformId}.${this.configService.get<string>(
             'RIOT_URL',
           )}/lol/match/v5/matches/by-puuid/${puuid}/ids`,
           {
+            params: {
+              ...params,
+            },
             headers: {
               'X-Riot-Token': this.riotToken,
             },
@@ -71,35 +73,44 @@ export class MatchesService {
     } catch (e) {
       const {
         response: { status },
+        data: {
+          status: { message },
+        },
       } = e;
 
-      if (status === 400) throw new BadRequestException();
-      if (status === 401) throw new UnauthorizedException();
-      if (status === 404) throw new NotFoundException();
-      throw new InternalServerErrorException(JSON.stringify(e));
+      handleErrorResponse(status, message, e);
     }
   }
 
-  async getMatchesDetails(region: string, summonerName: string) {
+  async getMatchesDetails(
+    platformId: string,
+    summonerName: string,
+    queryParams?: PaginationDto,
+  ) {
     try {
-      if (!region || !summonerName)
+      if (!platformId || !summonerName)
         throw new BadRequestException('Missing Params');
 
+      const params: QueryParamsRiotDto = {
+        count: queryParams.size,
+        start: queryParams.limit,
+      };
+      const region = RegionMapper(platformId);
+
       const { puuid } = await this.summonersService.getSummonerId(
-        region,
+        platformId,
         summonerName,
       );
-      const summonerRegion = RegionMapper(region);
-      const matches = await this.getMatchesIdsByPuuid(puuid, summonerRegion);
+      const matches = await this.getMatchesIdsByPuuid(puuid, region, params);
+
       const promises = matches.map(
-        (match) => this.getMatchDetailById(match, summonerRegion),
+        (match) => this.getMatchDetailById(match, region),
         [],
       );
       const matchesDetails = (await Promise.allSettled(promises)).map(
-        (data: any) => data.value,
+        (data: any) => MatchesMapper(data.value),
         [],
       );
-
       return matchesDetails;
     } catch (e) {
       const {
@@ -109,10 +120,7 @@ export class MatchesService {
         },
       } = e;
 
-      if (status === 400) throw new BadRequestException(`${message}`);
-      if (status === 401) throw new UnauthorizedException(`${message}`);
-      if (status === 404) throw new NotFoundException(`${message}`);
-      throw new InternalServerErrorException(JSON.stringify(e));
+      handleErrorResponse(status, message, e);
     }
   }
 }
