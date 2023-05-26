@@ -1,14 +1,9 @@
 import { HttpService } from '@nestjs/axios';
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import { SummonerDto } from './dtos/summoners.dto';
+import { handleErrorResponse } from 'src/utils/handle-error.helper';
 
 @Injectable()
 export class SummonersService {
@@ -22,13 +17,13 @@ export class SummonersService {
   }
 
   async getSummonerId(
-    region: string,
+    platformId: string,
     summonerName: string,
   ): Promise<SummonerDto> {
     try {
       const { data } = await firstValueFrom(
         this.httpService.get(
-          `https://${region}.${this.configService.get<string>(
+          `https://${platformId}.${this.configService.get<string>(
             'RIOT_URL',
           )}/lol/summoner/v4/summoners/by-name/${summonerName}`,
           {
@@ -48,10 +43,7 @@ export class SummonersService {
         },
       } = e;
 
-      if (status === 400) throw new BadRequestException(`${message}`);
-      if (status === 401) throw new UnauthorizedException(`${message}`);
-      if (status === 404) throw new NotFoundException(`${message}`);
-      throw new InternalServerErrorException(JSON.stringify(e));
+      handleErrorResponse(status, message, e);
     }
   }
 }

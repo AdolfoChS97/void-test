@@ -29,20 +29,23 @@ export class SummonersController {
   })
   @ApiParam({
     example: 'LA1',
-    name: 'region',
-    description: 'It will be the region that you belong',
+    name: 'platformId',
+    description: 'It will be the platform that you belong',
   })
   @ApiParam({
     example: 'summoner name',
     name: 'summonerName',
   })
-  @Get(':region/:summonerName')
+  @Get(':platformId/:summonerName')
   async getSummonerId(
-    @Param('region') region: string,
+    @Param('platformId') platformId: string,
     @Param('summonerName') summonerName: string,
   ) {
     try {
-      return await this.summonersService.getSummonerId(region, summonerName);
+      return await this.summonersService.getSummonerId(
+        platformId,
+        summonerName,
+      );
     } catch (e) {
       throw e;
     }
