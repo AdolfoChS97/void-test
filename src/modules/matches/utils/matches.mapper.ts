@@ -11,52 +11,53 @@ interface PlayerInfo {
   spells: number[];
 }
 
-export const MatchesMapper = (data): GetMatchesDto => {
-  const {
-    metadata: { matchId },
-    info: {
-      gameCreation,
-      gameDuration,
-      gameEndTimestamp,
-      gameId,
-      queueId,
-      participants,
-    },
-  } = data;
+export const MatchesMapper = (data): GetMatchesDto | any => {
+  // const {
+  //   metadata: { matchId },
+  //   info: {
+  //     gameCreation,
+  //     gameDuration,
+  //     gameEndTimestamp,
+  //     gameId,
+  //     queueId,
+  //     participants,
+  //   },
+  // } = data;
 
-  const players = participants.map((participant) => {
-    const info: PlayerInfo = {
-      championUsed: participant.championName,
-      win: participant.win,
-      kda:
-        participant.kills +
-        participant.assists / Math.max(participant.deaths, 1),
-      kills: participant.kills,
-      csPerMinute:
-        participant.laneMinionsFirst10Minutes / (participant.gameLength / 60),
-      runes: participant.perks.styles.reduce(
-        (result: Record<string, number>, style) => {
-          style.selections.forEach((selection) => {
-            result[selection.perk.toString()] = selection.var1;
-          });
-          return result;
-        },
-        {},
-      ),
-      assists: participant.assists,
-      spells: [participant.spell1Id, participant.spell2Id],
-    };
+  // const players = participants.map((participant) => {
+  //   const info: PlayerInfo = {
+  //     championUsed: participant.championName,
+  //     win: participant.win,
+  //     kda:
+  //       participant.kills +
+  //       participant.assists / Math.max(participant.deaths, 1),
+  //     kills: participant.kills,
+  //     csPerMinute:
+  //       participant.laneMinionsFirst10Minutes / (participant.gameLength / 60),
+  //     runes: participant.perks.styles.reduce(
+  //       (result: Record<string, number>, style) => {
+  //         style.selections.forEach((selection) => {
+  //           result[selection.perk.toString()] = selection.var1;
+  //         });
+  //         return result;
+  //       },
+  //       {},
+  //     ),
+  //     assists: participant.assists,
+  //     spells: [participant.spell1Id, participant.spell2Id],
+  //   };
 
-    return info;
-  });
+  //   return info;
+  // });
 
-  return {
-    matchId,
-    gameCreation,
-    gameDuration,
-    gameEndTimestamp,
-    gameId,
-    queueId,
-    players,
-  };
+  // return {
+  //   matchId,
+  //   gameCreation,
+  //   gameDuration,
+  //   gameEndTimestamp,
+  //   gameId,
+  //   queueId,
+  //   players,
+  // };
+  return data;
 };

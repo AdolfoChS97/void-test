@@ -8,6 +8,7 @@ import { PaginationDto } from 'src/dtos/pagination.dto';
 import { QueryParamsRiotDto } from 'src/dtos/riot-pagination.dto';
 import { MatchesMapper } from './utils/matches.mapper';
 import { handleErrorResponse } from 'src/utils/handle-error.helper';
+import { MatchesQueryParamsDto } from './dtos/matches.dto';
 
 @Injectable()
 export class MatchesService {
@@ -71,11 +72,15 @@ export class MatchesService {
   async getMatchesDetails(
     platformId: string,
     summonerName: string,
-    queryParams?: PaginationDto,
+    queryParams?: MatchesQueryParamsDto,
   ) {
     try {
       if (!platformId || !summonerName)
         throw new BadRequestException('Missing Params');
+
+      const filters = {
+        queueId: queryParams.queueId,
+      };
 
       const params: QueryParamsRiotDto = {
         count: queryParams.size,
@@ -93,10 +98,11 @@ export class MatchesService {
         (match) => this.getMatchDetailById(match, region),
         [],
       );
-      const matchesDetails = (await Promise.allSettled(promises)).map(
-        (data: any) => MatchesMapper(data.value),
-        [],
-      );
+
+      const matchesDetails = (await Promise.allSettled(promises))
+        .map((data: any) => MatchesMapper(data.value), [])
+        .filter((match) => match.queueId === filters.queueId);
+
       return matchesDetails;
     } catch (e) {
       handleErrorResponse(e);

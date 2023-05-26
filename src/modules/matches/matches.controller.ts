@@ -8,8 +8,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { PaginationDto } from 'src/dtos/pagination.dto';
-import { GetMatchesDto } from './dtos/matches.dto';
+import { GetMatchesDto, MatchesQueryParamsDto } from './dtos/matches.dto';
 
 @ApiTags('Matches')
 @Controller('matches')
@@ -42,6 +41,7 @@ export class MatchesController {
   })
   @ApiQuery({ name: 'size', type: 'number', example: 20 })
   @ApiQuery({ name: 'limit', type: 'number', example: 0 })
+  @ApiQuery({ name: 'queueId', type: 'number', example: 440 })
   @Get(':platformId/:summonerName')
   async getMatchesDetails(
     @Param('platformId') platformId: string,
@@ -53,7 +53,7 @@ export class MatchesController {
         forbidNonWhitelisted: true,
       }),
     )
-    queryParams: PaginationDto,
+    queryParams: MatchesQueryParamsDto,
   ) {
     try {
       return await this.matchesService.getMatchesDetails(
