@@ -37,14 +37,7 @@ export class MatchesService {
       );
       return data;
     } catch (e) {
-      const {
-        response: { status },
-        data: {
-          status: { message },
-        },
-      } = e;
-
-      handleErrorResponse(status, message, e);
+      handleErrorResponse(e);
     }
   }
 
@@ -71,14 +64,7 @@ export class MatchesService {
       );
       return data;
     } catch (e) {
-      const {
-        response: { status },
-        data: {
-          status: { message },
-        },
-      } = e;
-
-      handleErrorResponse(status, message, e);
+      handleErrorResponse(e);
     }
   }
 
@@ -113,14 +99,7 @@ export class MatchesService {
       );
       return matchesDetails;
     } catch (e) {
-      const {
-        response: { status },
-        data: {
-          status: { message },
-        },
-      } = e;
-
-      handleErrorResponse(status, message, e);
+      handleErrorResponse(e);
     }
   }
 }
