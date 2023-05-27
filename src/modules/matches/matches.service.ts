@@ -3,12 +3,11 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SummonersService } from '../summoners/summoners.service';
 import { firstValueFrom } from 'rxjs';
-import { RegionMapper } from './utils/region.mapper';
-import { PaginationDto } from 'src/dtos/pagination.dto';
 import { QueryParamsRiotDto } from 'src/dtos/riot-pagination.dto';
 import { MatchesMapper } from './utils/matches.mapper';
 import { handleErrorResponse } from 'src/utils/handle-error.helper';
 import { MatchesQueryParamsDto } from './dtos/matches.dto';
+import { RegionMapper } from 'src/utils/region.mapper';
 
 @Injectable()
 export class MatchesService {
