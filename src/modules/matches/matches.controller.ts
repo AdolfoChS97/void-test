@@ -36,15 +36,17 @@ export class MatchesController {
     example: 'LA1',
     name: 'platformId',
     description: 'It will be the platform that you belong',
+    required: true,
   })
   @ApiParam({
     example: 'summoner name',
     name: 'summonerName',
     description: `It's the nickname of the user`,
+    required: true,
   })
+  @ApiQuery({ name: 'queueId', type: 'number', example: 440, required: true })
   @ApiQuery({ name: 'size', type: 'number', example: 20 })
   @ApiQuery({ name: 'limit', type: 'number', example: 0 })
-  @ApiQuery({ name: 'queueId', type: 'number', example: 440 })
   @Get(':platformId/:summonerName')
   async getMatchesDetails(
     @Param('platformId') platformId: string,

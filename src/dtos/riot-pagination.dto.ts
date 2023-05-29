@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsOptional, IsPositive } from 'class-validator';
+import { IsInt, IsNotEmpty, IsPositive } from 'class-validator';
 
 export class QueryParamsRiotDto {
   @ApiProperty({
@@ -9,7 +9,7 @@ export class QueryParamsRiotDto {
       'Defaults to 20. Valid values: 0 to 100. Number of match ids to return.',
     default: 20,
   })
-  @IsOptional()
+  @IsNotEmpty()
   @IsInt()
   @IsPositive()
   count?: number;
@@ -20,7 +20,7 @@ export class QueryParamsRiotDto {
     description: 'Defaults to 0. Start index.',
     default: 0,
   })
-  @IsOptional()
+  @IsNotEmpty()
   @IsInt()
   @IsPositive()
   start?: number;

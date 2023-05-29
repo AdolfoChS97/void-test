@@ -48,7 +48,7 @@ export class MatchesService {
   async getMatchesIdsByPuuid(
     puuid: string,
     platformId: string,
-    params: QueryParamsRiotDto = { count: 20, start: 0 },
+    params: QueryParamsRiotDto,
   ): Promise<string[]> {
     try {
       const { data } = await firstValueFrom(
