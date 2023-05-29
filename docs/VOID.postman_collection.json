@@ -1,0 +1,26 @@
+{
+	"info": {
+		"_postman_id": "f26278b1-011e-4fb4-8ec9-28b7cd08ab92",
+		"name": "VOID",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6743782"
+	},
+	"item": [
+		{
+			"name": "Get recent matches",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Get player summary",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
