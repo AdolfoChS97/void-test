@@ -1,9 +1,10 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import { SummonerDto } from './dtos/summoners.dto';
 import { handleErrorResponse } from 'src/utils/handle-error.helper';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class SummonersService {
@@ -12,6 +13,7 @@ export class SummonersService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
+    @Inject(CACHE_MANAGER) private cacheService: Cache,
   ) {
     this.riotToken = this.configService.get<string>('RIOT_API_KEY');
   }
@@ -22,7 +24,7 @@ export class SummonersService {
   ): Promise<SummonerDto> {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.get(
+        this.httpService.get<SummonerDto>(
           `https://${platformId}.${this.configService.get<string>(
             'RIOT_URL',
           )}/lol/summoner/v4/summoners/by-name/${summonerName}`,
@@ -33,8 +35,8 @@ export class SummonersService {
           },
         ),
       );
-
-      return data;
+      await this.cacheService.set(data.id.toString(), data);
+      return await this.cacheService.get(data.id);
     } catch (e) {
       handleErrorResponse(e);
     }

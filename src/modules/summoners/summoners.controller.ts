@@ -1,6 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { SummonersService } from './summoners.service';
 import {
+  ApiExcludeController,
   ApiNotFoundResponse,
   ApiParam,
   ApiResponse,
@@ -11,6 +12,7 @@ import { SummonerDto } from './dtos/summoners.dto';
 
 @ApiTags('Summoners')
 @Controller('summoners')
+@ApiExcludeController()
 export class SummonersController {
   constructor(private readonly summonersService: SummonersService) {}
 

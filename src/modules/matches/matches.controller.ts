@@ -13,7 +13,10 @@ import { GetMatchesDto, MatchesQueryParamsDto } from './dtos/matches.dto';
 @ApiTags('Matches')
 @Controller('matches')
 export class MatchesController {
-  constructor(private readonly matchesService: MatchesService) {}
+  public get matchesService(): MatchesService {
+    return this._matchesService;
+  }
+  constructor(private readonly _matchesService: MatchesService) {}
 
   @ApiResponse({
     type: GetMatchesDto,

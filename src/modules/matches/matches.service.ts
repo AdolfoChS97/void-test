@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SummonersService } from '../summoners/summoners.service';
 import { firstValueFrom } from 'rxjs';
@@ -8,6 +8,8 @@ import { MatchesMapper } from './utils/matches.mapper';
 import { handleErrorResponse } from 'src/utils/handle-error.helper';
 import { MatchesQueryParamsDto } from './dtos/matches.dto';
 import { RegionMapper } from 'src/utils/region.mapper';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class MatchesService {
@@ -17,6 +19,7 @@ export class MatchesService {
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
     private readonly summonersService: SummonersService,
+    @Inject(CACHE_MANAGER) private cacheService: Cache,
   ) {
     this.riotToken = this.configService.get<string>('RIOT_API_KEY');
   }
@@ -35,7 +38,8 @@ export class MatchesService {
           },
         ),
       );
-      return data;
+      await this.cacheService.set(matchId, data);
+      return this.cacheService.get(matchId);
     } catch (e) {
       handleErrorResponse(e);
     }
@@ -62,7 +66,8 @@ export class MatchesService {
           },
         ),
       );
-      return data;
+      await this.cacheService.set(puuid, data);
+      return this.cacheService.get(puuid);
     } catch (e) {
       handleErrorResponse(e);
     }
