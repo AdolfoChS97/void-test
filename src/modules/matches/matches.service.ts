@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SummonersService } from '../summoners/summoners.service';
 import { firstValueFrom } from 'rxjs';
@@ -79,9 +79,6 @@ export class MatchesService {
     queryParams?: MatchesQueryParamsDto,
   ) {
     try {
-      if (!platformId || !summonerName)
-        throw new BadRequestException('Missing Params');
-
       const filters = {
         queueId: queryParams.queueId,
       };

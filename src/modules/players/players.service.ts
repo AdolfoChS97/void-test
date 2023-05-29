@@ -1,10 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import {
-  BadRequestException,
-  CACHE_MANAGER,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { handleErrorResponse } from 'src/utils/handle-error.helper';
 import { SummonersService } from '../summoners/summoners.service';
@@ -33,9 +28,6 @@ export class PlayersService {
     summonerName: string,
   ): Promise<PlayerSummaryDto> {
     try {
-      if (!platformId || !summonerName)
-        throw new BadRequestException('Missing Params');
-
       const { id, name, summonerLevel, profileIconId } =
         await this.summonersService.getSummonerId(platformId, summonerName);
 
