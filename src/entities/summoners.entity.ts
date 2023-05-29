@@ -35,7 +35,7 @@ export class SummonersEntity {
   })
   puuid: string;
 
-  @Column({ type: 'long' })
+  @Column({ type: 'int' })
   @ApiProperty({
     type: 'number',
     description:
@@ -43,7 +43,7 @@ export class SummonersEntity {
   })
   revisionDate: number;
 
-  @Column({ type: 'long' })
+  @Column({ type: 'int' })
   @ApiProperty({
     type: 'number',
     description: 'Summoner level associated with the summoner.',

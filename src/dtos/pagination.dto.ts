@@ -9,7 +9,6 @@ export class PaginationDto {
       'Defaults to 20. Valid values: 0 to 100. Number of match ids to return.',
     default: 20,
   })
-  @IsOptional()
   @IsPositive()
   @IsInt()
   size?: number;
@@ -20,7 +19,6 @@ export class PaginationDto {
     description: 'Defaults to 0. Start index.',
     default: 0,
   })
-  @IsOptional()
   @IsInt()
   limit?: number;
 }

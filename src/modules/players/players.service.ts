@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { handleErrorResponse } from 'src/utils/handle-error.helper';
 import { SummonersService } from '../summoners/summoners.service';
@@ -8,6 +8,7 @@ import { LeagueSummaryDto } from './dtos/league.dto';
 import { LeagueMapper } from './utils/league.mapper';
 import PlayerSummaryDto from './dtos/player.dto';
 import { PlayerSummaryMapper } from './utils/player-summary.mapper';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class PlayersService {
@@ -17,6 +18,7 @@ export class PlayersService {
     private httpService: HttpService,
     private readonly configService: ConfigService,
     private readonly summonersService: SummonersService,
+    @Inject(CACHE_MANAGER) private cacheService: Cache,
   ) {
     this.riotToken = this.configService.get<string>('RIOT_API_KEY');
   }
@@ -26,9 +28,6 @@ export class PlayersService {
     summonerName: string,
   ): Promise<PlayerSummaryDto> {
     try {
-      if (!platformId || !summonerName)
-        throw new BadRequestException('Missing Params');
-
       const { id, name, summonerLevel, profileIconId } =
         await this.summonersService.getSummonerId(platformId, summonerName);
 
@@ -67,7 +66,14 @@ export class PlayersService {
           },
         ),
       );
-      return data.map((summary: LeagueSummaryDto) => LeagueMapper(summary), []);
+      await this.cacheService.set(summonerId, data);
+      const cachedLeagueSummary = await this.cacheService.get<
+        LeagueSummaryDto[]
+      >(summonerId);
+      return cachedLeagueSummary.map(
+        (summary: LeagueSummaryDto) => LeagueMapper(summary),
+        [],
+      );
     } catch (e) {
       handleErrorResponse(e);
     }
