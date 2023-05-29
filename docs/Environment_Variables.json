@@ -1,0 +1,27 @@
+{
+	"id": "2b2e9776-88de-4fb6-ab67-b4070ad9e28c",
+	"name": "New Environment",
+	"values": [
+		{
+			"key": "Url",
+			"value": "http://localhost:3000",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "platformId",
+			"value": "LA1",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "summonerName",
+			"value": "Dark ing Future",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2023-05-29T21:28:00.800Z",
+	"_postman_exported_using": "Postman/10.12.13"
+}
