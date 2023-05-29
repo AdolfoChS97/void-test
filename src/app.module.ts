@@ -28,8 +28,6 @@ const configService = new ConfigService();
     ConfigModule.forRoot({ isGlobal: true, cache: true }),
     CacheModule.register({
       isGlobal: true,
-      host: configService.get<string>('REDIS_HOST'),
-      port: configService.get<number>('REDIS_PORT'),
       ttl: 60,
     }),
     SummonersModule,
