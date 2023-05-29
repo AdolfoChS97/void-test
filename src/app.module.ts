@@ -7,6 +7,9 @@ import { SummonersModule } from './modules/summoners/summoners.module';
 import { MatchesModule } from './modules/matches/matches.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { PlayersModule } from './modules/players/players.module';
+
+import * as Joi from 'joi';
+
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SummonersEntity } from './entities/summoners.entity';
 
@@ -25,7 +28,27 @@ const configService = new ConfigService();
     //   synchronize: true,
     //   logging: false,
     // }),
-    ConfigModule.forRoot({ isGlobal: true, cache: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      cache: true,
+      validationSchema: Joi.object({
+        APP_PORT: Joi.number().required(),
+        NODE_ENV: Joi.string().valid('development', 'production').required(),
+        DB_USER: Joi.string().required(),
+        DB_HOST: Joi.string().ip().required(),
+        DB_PORT: Joi.number().required(),
+        DB_PASS: Joi.string().required(),
+        DB_NAME: Joi.string().required(),
+        RIOT_API_KEY: Joi.string()
+          .required()
+          .messages({
+            'string.base': 'Riot API key must be a string',
+            'string.empty': 'Riot API key cannot be empty',
+            'any.required': 'Riot API key is required',
+          }).label('Riot API Key'),
+        RIOT_URL: Joi.string().required(),
+      }),
+    }),
     CacheModule.register({
       isGlobal: true,
       ttl: 60,
