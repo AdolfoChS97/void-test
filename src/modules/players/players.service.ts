@@ -9,6 +9,8 @@ import { LeagueMapper } from './utils/league.mapper';
 import PlayerSummaryDto from './dtos/player.dto';
 import { PlayerSummaryMapper } from './utils/player-summary.mapper';
 import { Cache } from 'cache-manager';
+import { QueryParamsDto } from '../matches/dtos/matches.dto';
+import { getQueueType } from 'src/utils/getQueueType.helper';
 
 @Injectable()
 export class PlayersService {
@@ -26,14 +28,17 @@ export class PlayersService {
   async getPlayerSummary(
     platformId: string,
     summonerName: string,
+    params: QueryParamsDto,
   ): Promise<PlayerSummaryDto> {
     try {
+      const { queueId } = params;
       const { id, name, summonerLevel, profileIconId } =
         await this.summonersService.getSummonerId(platformId, summonerName);
 
       const summaryLeague = await this.getLeagueSummaryBySummonerId(
         id,
         platformId,
+        queueId,
       );
 
       return PlayerSummaryMapper(
@@ -51,6 +56,7 @@ export class PlayersService {
   async getLeagueSummaryBySummonerId(
     summonerId,
     platformId,
+    queueId,
   ): Promise<LeagueSummaryDto[]> {
     try {
       const { data } = await firstValueFrom(
@@ -70,10 +76,11 @@ export class PlayersService {
       const cachedLeagueSummary = await this.cacheService.get<
         LeagueSummaryDto[]
       >(summonerId);
-      return cachedLeagueSummary.map(
-        (summary: LeagueSummaryDto) => LeagueMapper(summary),
-        [],
-      );
+      return cachedLeagueSummary
+        .map((summary: LeagueSummaryDto) => LeagueMapper(summary), [])
+        .filter(
+          (leagueSummary) => leagueSummary.queueType == getQueueType(queueId),
+        );
     } catch (e) {
       handleErrorResponse(e);
     }

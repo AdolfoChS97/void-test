@@ -1,6 +1,7 @@
 import { ApiProperty, IntersectionType, PickType } from '@nestjs/swagger';
-import { IsInt, IsPositive } from 'class-validator';
+import { IsEnum, IsInt, IsNotEmpty, IsPositive } from 'class-validator';
 import { PaginationDto } from 'src/dtos/pagination.dto';
+import { GameType } from 'src/utils/queueType.enum';
 
 export class PlayerInfoDto {
   @ApiProperty({
@@ -82,8 +83,10 @@ export class GetMatchesDto {
   gameId: number;
 
   @ApiProperty({ type: 'number', description: 'The ID of the game queue.' })
+  @IsNotEmpty()
   @IsInt()
   @IsPositive()
+  @IsEnum(GameType)
   queueId: number;
 
   @ApiProperty({
@@ -99,3 +102,12 @@ export class MatchesQueryParamsDto extends IntersectionType(
   PickType(GetMatchesDto, ['queueId'] as const),
   PaginationDto,
 ) {}
+
+export class QueryParamsDto {
+  @ApiProperty({ type: 'number', description: 'The ID of the game queue.' })
+  @IsNotEmpty()
+  @IsInt()
+  @IsPositive()
+  @IsEnum(GameType)
+  queueId: GameType;
+}

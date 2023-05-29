@@ -10,7 +10,39 @@
 			"name": "Get recent matches",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [
+					{
+						"key": "",
+						"value": "440",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{Url}}/matches/{{platformId}}/{{summonerName}}?size=1&queueId=440&limit=0",
+					"host": [
+						"{{Url}}"
+					],
+					"path": [
+						"matches",
+						"{{platformId}}",
+						"{{summonerName}}"
+					],
+					"query": [
+						{
+							"key": "size",
+							"value": "1"
+						},
+						{
+							"key": "queueId",
+							"value": "440"
+						},
+						{
+							"key": "limit",
+							"value": "0"
+						}
+					]
+				}
 			},
 			"response": []
 		},
@@ -18,7 +50,24 @@
 			"name": "Get player summary",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "{{Url}}/players/{{platformId}}/{{summonerName}}?queueId=440",
+					"host": [
+						"{{Url}}"
+					],
+					"path": [
+						"players",
+						"{{platformId}}",
+						"{{summonerName}}"
+					],
+					"query": [
+						{
+							"key": "queueId",
+							"value": "440"
+						}
+					]
+				}
 			},
 			"response": []
 		}
