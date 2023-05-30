@@ -48,15 +48,12 @@
 
 ## Description
 
-  
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
+This repository has the purpose of obtaining relevant data about LoL players, their games and statistics within the game.
   
 
 ## Installation
 
-  Download next repository
+ -  Download next repository
 
 ```bash
 
@@ -64,15 +61,43 @@ $ git clone https://github.com/AdolfoChS97/void-test.git
 
 ```
 
-  
+- Enter the repository that we just downloaded
+
+```bash
+	
+$ cd void-test/
+
+```
+ 
+ -  Copy the content of **.env.example** into a new file called **.env** 
+
+```bash
+	
+$ cp .env.example .env
+
+```
+ 
+ - If you have not changed the value of the RIOT_API_KEY environment variable in your .env file, the API will not be able to consume the data. I invite you to place the correct API_KEY as follows: 
+ 
+```bash 
+
+RIOT_API_KEY=<Your api_key here>
+
+```
+
+- If you don't how to get this api_key you can follow the next tutorial from second point: 
+[https://apipheny.io/riot-games-api/](https://apipheny.io/riot-games-api/)
+
 
 ## Running the app
 
-  Make sure have installed **docker** in your OS 
+  Make sure have installed **docker** in your OS and execute: 
 
 ```bash
 $  docker compose build && docker compose up
 ```
+
+and enjoy !!! :)
 
 ## Testing the API
 
