@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import * as redisStore from 'cache-manager-redis-store';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SummonersModule } from './modules/summoners/summoners.module';
@@ -17,17 +16,17 @@ const configService = new ConfigService();
 
 @Module({
   imports: [
-    // TypeOrmModule.forRoot({
-    //   type: 'postgres',
-    //   host: configService.get<string>('DB_HOST'),
-    //   port: configService.get<number>('DB_PORT'),
-    //   username: configService.get<string>('DB_USER'),
-    //   password: configService.get<string>('DB_PASS'),
-    //   database: configService.get<string>('DB_NAME'),
-    //   entities: [SummonersEntity],
-    //   synchronize: true,
-    //   logging: false,
-    // }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: configService.get<string>('DB_HOST'),
+      port: configService.get<number>('DB_PORT'),
+      username: configService.get<string>('DB_USER'),
+      password: configService.get<string>('DB_PASS'),
+      database: configService.get<string>('DB_NAME'),
+      entities: [SummonersEntity],
+      synchronize: true,
+      logging: false,
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
@@ -45,7 +44,8 @@ const configService = new ConfigService();
             'string.base': 'Riot API key must be a string',
             'string.empty': 'Riot API key cannot be empty',
             'any.required': 'Riot API key is required',
-          }).label('Riot API Key'),
+          })
+          .label('Riot API Key'),
         RIOT_URL: Joi.string().required(),
       }),
     }),

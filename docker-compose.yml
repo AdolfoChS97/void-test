@@ -13,6 +13,8 @@ services:
       - .env
     volumes:
       - ./:/app
+    networks:
+      - ingress
   db:
     image: postgres:14.1-alpine
     restart: always
@@ -26,6 +28,10 @@ services:
       - 5432
     volumes: 
       - db:/var/lib/postgresql/data
+      - ./init-scripts/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    networks:
+      ingress: 
+        ipv4_address: 10.5.0.5
 # # Names our volume
 volumes:
   db:
@@ -33,5 +39,7 @@ volumes:
 
 networks:
   ingress:
-    name: void
-    external: true
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
