@@ -142,6 +142,29 @@ RIOT_API_KEY=<Your api_key here>
 [https://apipheny.io/riot-games-api/](https://apipheny.io/riot-games-api/)
 
 
+- In addition we need to run one else command, as we see follows: 
+
+```bash
+
+$ chmod +x init-scripts/init-db.sh
+
+```
+
+  
+
+- If you don't how to get this api_key you can follow the next tutorial from second point:
+
+[https://apipheny.io/riot-games-api/](https://apipheny.io/riot-games-api/)
+
+
+- In addition we need to run one else command, as we see follows: 
+
+```bash
+
+$ chmod +x init-scripts/init-db.sh
+
+```
+  
 
 ## Running the app
 
