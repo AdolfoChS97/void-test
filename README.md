@@ -142,40 +142,6 @@ RIOT_API_KEY=<Your api_key here>
 [https://apipheny.io/riot-games-api/](https://apipheny.io/riot-games-api/)
 
 
-- Enter the repository that we just downloaded
-
-  
-
-```bash
-
-$  cd  void-test/
-
-  
-
-```
-
-- Copy the content of **.env.example** into a new file called **.env**
-
-  
-
-```bash
-
-$  cp  .env.example  .env
-
-  
-
-```
-
-- If you have not changed the value of the RIOT_API_KEY environment variable in your .env file, the API will not be able to consume the data. I invite you to place the correct API_KEY as follows:
-
-```bash
-
- 
-RIOT_API_KEY=<Your  api_key  here>
-
-
-```
-
 - In addition we need to run one else command, as we see follows: 
 
 ```bash
